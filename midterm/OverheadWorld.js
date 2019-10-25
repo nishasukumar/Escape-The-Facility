@@ -16,6 +16,8 @@ function OverheadWorld(params) {
 
   this.pianoTiles = params.pianoTiles;
 
+  this.bookTiles = params.bookTiles;
+
   // an array to hold all tile graphics
   this.tileLibrary = [];
 
@@ -65,7 +67,15 @@ function OverheadWorld(params) {
   }
 
   this.isTileGame = function(id){
-    if((id in this.solidTiles || id == -1) && id in this.pianoTiles ){
+    if((id in this.solidTiles || id == -1) && id in this.pianoTiles){
+      return true
+    }
+
+    return false
+  }
+
+  this.isTileBook = function(id){
+    if((id in this.solidTiles || id == -1) && id in this.bookTiles){
       return true
     }
 

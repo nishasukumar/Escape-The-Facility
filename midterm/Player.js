@@ -121,7 +121,16 @@ function Player(x, y, world) {
     var tile = world.getTile(this.top[0], this.top[1]);
     // console.log("touch")
     if(world.isTileGame(tile)){
-      console.log("piano")
+      // console.log("piano")
+      return true;
+    }
+  }
+
+  this.bookInteract = function(){
+    var tile = world.getTile(this.top[0], this.top[1]);
+    // console.log("touch")
+    if(world.isTileBook(tile)){
+      // console.log("piano")
       return true;
     }
   }
