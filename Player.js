@@ -7,27 +7,17 @@ function Player(x, y, world) {
   // tiles that are in our path
   this.world = world;
 
-  this.leftCycle = [];
-  this.rightCycle = [];
-  this.upCycle = [];
-  this.downCycle = [];
-  this.currentImageNum = 0;
-  this.currentCycle = this.leftCycle;
-  for (var i = 0; i < 2; i++) {
-    var filename = "frame" + nf(i,2) + ".png";
-    this.downCycle.push( loadImage("player/playerDown/" + filename) )
-    this.upCycle.push( loadImage("player/playerUp/" + filename) )
-    this.leftCycle.push( loadImage("player/playerLeft/" + filename) )
-    this.rightCycle.push( loadImage("player/playerRight/" + filename) )
-  }
+  // load & store our artwork
+  this.artworkLeft = loadImage('player/tile005.png');
+  this.artworkRight = loadImage('player/tile008.png');
+  this.artworkUp = loadImage('player/tile010.png');
+  this.artworkDown = loadImage('player/tile001.png');
 
-  this.currentCycle = this.leftCycle;
-  this.currentImage = this.currentCycle[ this.currentImageNum ]
-  
+  // assume we are pointing to the right
+  this.currentImage = this.artworkRight;
+
   // define our speed
   this.speed = 3;
-
-  //this.pass = 0;
 
   // display our player
   this.display = function() {
@@ -65,132 +55,65 @@ function Player(x, y, world) {
 
     // see if one of our movement keys is down -- if so, we should try and move
     // note that this character responds to the following key combinations:
+    // WASD
+    // wasd
     // The four directional arrows
-    if (keyIsDown(LEFT_ARROW)) {
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(97) || keyIsDown(65)) {
 
       // see which tile is to our left
       var tile = world.getTile(this.left[0], this.left[1]);
 
-      // would moving in this direction require a room change?
-      if (tile == "roomChange") {
-        // ask the world to request a room change
-        world.changeRoom("left");
-
-        // move the player into the new room
-        this.x = width - this.currentImage.width;
-      }
-
-      // otherwise this is a regular tile
-      else {
-      
-        // is this tile solid?
-        if (!world.isTileSolid(tile)) {
-          // move
-          this.x -= this.speed;
-        }
+      // is this tile solid?
+      if (!world.isTileSolid(tile)) {
+        // move
+        this.x -= this.speed;
       }
 
       // change artwork
-      //this.currentImage = this.artworkLeft;
-      this.currentCycle = this.leftCycle;
+      this.currentImage = this.artworkLeft;
       this.displaySensor("left");
     }
-    if (keyIsDown(RIGHT_ARROW)) {
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(100) || keyIsDown(68)) {
       // see which tile is to our right
       var tile = world.getTile(this.right[0], this.right[1]);
 
-      // would moving in this direction require a room change?
-      //&& this.pass != 0
-      if (tile == "roomChange" ) {
-        // ask the world to request a room change
-        world.changeRoom("right");
-
-        // move the player into the new room
-        this.x = 0 + this.currentImage.width;
-      }
-
-      // otherwise this is a regular tile
-      else {
-
-        // is this tile solid?
-        if (!world.isTileSolid(tile)) {
-          this.x += this.speed;
-
-        }
+      // is this tile solid?
+      if (!world.isTileSolid(tile)) {
+        // move
+        this.x += this.speed;
       }
 
       // change artwork
-      //this.currentImage = this.artworkRight;
-      this.currentCycle = this.rightCycle;
+      this.currentImage = this.artworkRight;
       this.displaySensor("right");
     }
-    if (keyIsDown(DOWN_ARROW)) {
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(115) || keyIsDown(83)) {
       // see which tile is below us
       var tile = world.getTile(this.bottom[0], this.bottom[1]);
 
-      // would moving in this direction require a room change?
-      if (tile == "roomChange") {
-        // ask the world to request a room change
-        world.changeRoom("down");
-
-        // move the player into the new room
-        this.y = 0 + this.currentImage.height;
-      }
-
-      // otherwise this is a regular tile
-      else {
-
-        // is this tile solid?
-        if (!world.isTileSolid(tile)) {
-          // move
-          this.y += this.speed;
-        }
+      // is this tile solid?
+      if (!world.isTileSolid(tile)) {
+        // move
+        this.y += this.speed;
       }
 
       // change artwork
-      //this.currentImage = this.artworkDown;
-      this.currentCycle = this.downCycle;
+      this.currentImage = this.artworkDown;
       this.displaySensor("down");
     }
-    if (keyIsDown(UP_ARROW)) {
+    if (keyIsDown(UP_ARROW) || keyIsDown(119) || keyIsDown(87)) {
       // see which tile is below us
       var tile = world.getTile(this.top[0], this.top[1]);
 
-      // would moving in this direction require a room change?
-      if (tile == "roomChange") {
-        // ask the world to request a room change
-        world.changeRoom("up");
-
-        // move the player into the new room
-        this.y = height - this.currentImage.height-50;
-      }
-
-      // otherwise this is a regular tile
-      else {
-
-        // is this tile solid?
-        if (!world.isTileSolid(tile)) {
-          // move
-          this.y -= this.speed;
-        }
+      // is this tile solid?
+      if (!world.isTileSolid(tile)) {
+        // move
+        this.y -= this.speed;
       }
 
       // change artwork
-      //this.currentImage = this.artworkUp;
-      this.currentCycle = this.upCycle;
+      this.currentImage = this.artworkUp;
       this.displaySensor("up");
-    }
-
-    this.currentImage = this.currentCycle[ this.currentImageNum ]
-    // increase current image to go to the next cycle image if a key is down
-    // only do this every few frames since we don't want this to run too fast!
-    if (keyIsPressed && frameCount % 10 == 0) {
-      this.currentImageNum += 1;
-    }
-
-    // cycle around to the beginning of the walk cycle, if necessary
-    if (this.currentImageNum >= 2) {
-      this.currentImageNum = 0;
     }
   }
 
@@ -204,33 +127,16 @@ function Player(x, y, world) {
   }
 
   this.bookInteract = function(){
-    var tile1 = world.getTile(this.top[0], this.top[1]);
-
-    var tile2 = world.getTile(this.bottom[0], this.bottom[1]);
-
-    if(world.isTileBook1(tile1)){
+    var tile = world.getTile(this.top[0], this.top[1]);
+    // console.log("touch")
+    if(world.isTileBook1(tile)){
+      // console.log("piano")
       return 1;
     }
-    if(world.isTileBook2(tile2)){
+    if(world.isTileBook2(tile)){
+      // console.log("piano")
       return 2;
     }
-    if(world.isTileBook3(tile1)){
-      return 3;
-    }
     return 0;
-  }
-
-  this.poemInteract = function(){
-    var tile = world.getTile(this.top[0], this.top[1]);
-    if(world.isPoemGame(tile)){
-      return true;
-    }
-  }
-
-  this.canvasInteract = function(){
-    var tile = world.getTile(this.top[0], this.top[1]);
-    if(world.isTileCanvas(tile)){
-      return true;
-    }
   }
 }
